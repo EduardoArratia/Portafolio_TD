@@ -1,0 +1,16 @@
+h1{
+        color: aqua;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+.fondo{
+        background-image: url("/src/images/IMG_5488-1.jpg"); /* siempre debe terminar en JPG */
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 300px;
+        background-size: cover;       
+};
+
+
+

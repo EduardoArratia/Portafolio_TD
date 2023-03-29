@@ -1,8 +1,37 @@
-h1{
-        color: aqua;
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+/* root {} para setear de manera general*/
+
+:root {
+    --main-font-family: 'Barlow',sans-serif;
+    --main-color:rgb(255, 218, 139);
+    
+}
+p {
+    font-family: var(--main-font-family);
+    color: var(--main-color);
+    margin-left: 100px;
+    margin-bottom: 70px;
 }
 
+h1{
+        color: var(--main-color);
+        font-family: var(--main-font-family);
+        font-weight: bold;
+        font-size: 34pt;
+        
+    }
+    
+div{
+    display: grid;
+}
+
+a {
+    color: inherit; 
+    font-family: var(--main-font-family);
+    color: var(--main-color);
+    
+    
+} 
 
 .fondo{
         background-image: url("/src/images/IMG_5488-1.jpg"); /* siempre debe terminar en JPG */
@@ -12,5 +41,168 @@ h1{
         background-size: cover;       
 };
 
+/* TOTAL CARDS*/
+.total-cards {
 
+        display: grid;    
+        grid-template-columns: 2fr 2fr 2fr 2fr ; 
+        
+    }
+
+    
+@media (max-width: 1067px){
+    .total-cards{
+      display: block;
+     
+  
+    }}
+  
+
+/* CARD INICIO */
+.card {
+    
+    background-image:url("/src/images/Sin\ título-1.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 200px;
+    
+    /* justify-content: left;
+    text-align: left; */
+    /* background-color: #252627; */
+    /* font-family: var(--main-font-family); */
+    /* -webkit-border-radius: 100px;
+    border-radius: 100px; */
+    /* color: var(--main-color);
+    margin: 0; */
+    /* shape-outside: circle(50%) border-box; */
+    /* -webkit-box-shadow: -2px 6px 20px 5px rgba(0,0,0,0.30);  */
+    /* box-shadow: -2px 6px 20px 5px rgba(0,0,0,0.30); */
+}
+
+.boton {
+
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+    width: 80%;
+    border: 0;
+    border-radius: 5px;
+    padding: 10px;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: #325971;
+    font-family: 'Righteous', cursive;
+    text-decoration: none;
+    color: #c7defa;
+
+}
+
+
+
+
+    /* CARD categoria */
+
+    .iniciosesion {
+        box-sizing: content-box;
+        grid-column-start: 1;
+        justify-content: center;
+        text-align: left;
+        
+    }
+
+    .mercado {
+        box-sizing: content-box;
+        grid-column-start: 2;
+        justify-content: center;
+        text-align: left;
+        
+    }
+
+    
+    .perfil {
+        box-sizing: content-box;
+        grid-column-start: 1;
+        text-align: left;
+    
+    }
+
+    
+
+    .arquitectura {
+        box-sizing: content-box;
+        grid-column-start: 2;
+        text-align: left;
+        
+    }
+
+    .aplicacionweb {
+        box-sizing: content-box;
+        grid-column-start: 3;
+        text-align: left;
+        
+    }
+
+    .bootcamp {
+        box-sizing: content-box;
+        grid-column-start: 4;
+        text-align: left;
+        
+    }
+
+  
+    .linkinicio {
+        box-sizing: content-box;
+        font-weight: bold;
+        justify-content: left;
+        text-align: left;
+        font-size: 25pt;
+        margin-left: 100px;
+        padding-top: 50px;
+       
+    }
+    
+    .formulario-iniciosesion {
+        list-style-type: none;
+        margin-top: 10%;
+        padding: 10px;
+        overflow: hidden;
+    }
+    
+    .campo {
+    
+        justify-content: left;
+        text-align: left;
+        font-size: 12pt;
+        color:var(--main-color);
+        border-radius: 20px;
+        width: 100%;
+    }
+    
+    .boton-iniciosesion {
+    
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        display: inline-block;
+        width: 80%;
+        border: 0;
+        border-radius: 5px;
+        padding: 10px;
+        text-transform: uppercase;
+        cursor: pointer;
+        background-color: #325971;
+        text-decoration: none;
+        color: var(--main-color)
+    
+    }
+    
+    .boton-iniciosesion:hover {
+    
+        background-color:#0EB1D2;
+        color: #325971;
+        font-weight: bolder;
+    
+    }
+    
 

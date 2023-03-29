@@ -1,0 +1,22 @@
+    <div class="total-cards ">                      
+        <div class="iniciosesion card"> 
+            <h3 class="linkinicio">Inicio</h3>
+            <form action="inicio" method="POST">  {{!-- BUSCAR INFO DE ACTION --}}
+                <div class="campo">
+                    <label >Usuario/Email </label>
+                    <input type="text" name="username" id="">  {{!-- Se usa username porque acá se pide esa variables "passport.use(new PassportLocal(function(-->username,password,done)"{ --}}
+                </div>
+
+                <div class="campo">
+                    <label >Contraseña</label>
+                    <input type="password" name="password" id="">
+                    <input class="boton" type="submit" value="Iniciar Sesion">
+                </div>
+            </form>  
+        </div>   
+
+        <div class="mercado card"> 
+            <h3  class="linkinicio">Mercado</h3>
+            <a href="/tiendas.html" class="boton-mercado">Entrar</a>                               
+        </div>        
+    </div>

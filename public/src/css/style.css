@@ -3,7 +3,7 @@
 
 :root {
     --main-font-family: 'Barlow',sans-serif;
-    --main-color:rgb(255, 218, 139);
+    --main-color:rgb(143, 164, 173);
     
 }
 p {
@@ -13,7 +13,7 @@ p {
     margin-bottom: 70px;
 }
 
-h1{
+.titulo{
         color: var(--main-color);
         font-family: var(--main-font-family);
         font-weight: bold;
@@ -32,6 +32,19 @@ a {
     
     
 } 
+
+.encabezado {
+    display:flex;
+   
+}
+
+.dot-inicio {
+    justify-items: center;
+    justify-items: center;
+    margin-top: 50px;
+    height: 25px;
+
+}
 
 .fondo{
         background-image: url("/src/images/IMG_5488-1.jpg"); /* siempre debe terminar en JPG */
@@ -61,7 +74,7 @@ a {
 /* CARD INICIO */
 .card {
     
-    background-image:url("/src/images/Sin\ título-1.png");
+    background-image:url("/src/images/Sin título-1.png");
     background-repeat: no-repeat;
     background-size: contain;
     height: 200px;

@@ -19,7 +19,7 @@ const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 //Donde va la carpeta public donde irán css
-app.use(express.static(join(__dirname,"/public")))
+app.use(express.static(join(__dirname,"/public"))) //join concatena la direccion no como string, sino como url
 
 //Donde va la carpeta public donde irán los script
 app.use(express.static(join(__dirname,"/js")))

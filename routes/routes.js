@@ -6,8 +6,9 @@ import PassportLocal from "passport-local" // te permite guardar la info hasta f
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import pg from "pg";
-
-import dotenv from "dotenv" // proteccion de datos de la base de datos
+// import conect from "../"
+import dotenv from "dotenv"
+// proteccion de datos de la base de datos
 // import CryptoJS from "crypto-js" para encriptar contraseña 
 
 
@@ -20,7 +21,7 @@ let nombre;
 let autenticacion = false;
 
 
-//configurar dotenv
+//configurar dotenv-----
 dotenv.config()
 
 const pool =new Pool({
@@ -76,7 +77,8 @@ router.use(passport.session());
 // registrar asincrono
 
 
-passport.use(new PassPortLocal(async function (username, password, done) {
+
+async function autenticarUsuario(username, password, done) {
     let usuario
     try {
         const res = await pool.query(`SELECT correo, contraseña, id, nombre from usuarios where correo LIKE $1`, [username])
@@ -88,7 +90,9 @@ passport.use(new PassPortLocal(async function (username, password, done) {
         return done(null, false)
     } catch (error) {
         throw error
-    }}))
+    }}
+
+    passport.use(new PassPortLocal(autenticarUsuario));
 
 //crear usuario
 async function agregarUsuario(nombre, apellido, edad, correo, contraseña) {
@@ -134,23 +138,23 @@ router.get("/arquitectura", (req, res) => {
 })
 
 // app debe estar solo asi para que no se entre sin autentificar
-router.get("/mapa", (req, res) => {
-    res.render("mapa")
-})
-
-
-
-// router.get("/mapa", (req,res,next) =>{                   
-//     if(req.isAuthenticated()){ 
-//         autenticacion = true
-//         return next()
-//     }else{
-//         res.redirect("/login")
-//     }
-// },
-// (req, res) =>{ 
-//     res.render("mapa",{autenticacion})
+// router.get("/mapa", (req, res) => {
+//     res.render("mapa")
 // })
+
+
+
+router.get("/mapa", (req,res,next) =>{                   
+    if(req.isAuthenticated()){ 
+        autenticacion = true
+        return next()
+    }else{
+        res.redirect("/login")
+    }
+},
+(req, res) =>{ 
+    res.render("mapa",{autenticacion})
+})
 
 // acceder a bootcamp
 router.get("/bootcamp", (req, res) => {
@@ -183,6 +187,15 @@ router.get("/registro", (req, res) => {
 //     const autenticacion = true;
 //     res.render("mapa",{autenticacion, nombre: req.user.name } ); 
 // });
+
+router.post("/login", passport.authenticate("local", {
+    failureRedirect: "/login"
+  }), function(req, res) {
+    const autenticacion = true;
+    const nombre = req.user.name;
+    res.render("mapa", { autenticacion, nombre });
+  });
+  
 
 // Crear usuario y registrar en la base de datos
 router.post('/registro', async (req, res) => {

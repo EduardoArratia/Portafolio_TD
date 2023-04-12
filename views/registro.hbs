@@ -1,0 +1,28 @@
+{{#> template}}
+<div class="mercado card">
+    <h3 class="linkinicio">Crear Usuario</h3>
+    <form action="registro" method="POST"> 
+        <div class="campo">
+            <label>Nombre</label>
+            <input type="text" name="nombre" > 
+        </div>
+        <div class="campo">
+            <label>Apellido</label>
+            <input type="text" name="apellido"> 
+        </div>
+        <div class="campo">
+            <label>edad </label>
+            <input type="text" name="edad" > 
+        </div>
+        <div class="campo">
+            <label>Email </label>
+            <input type="text" name="correo" > 
+        </div>
+        <div class="campo">
+            <label>Contraseña</label>
+            <input type="password" name="contraseña" >
+            <input class="boton" type="submit" value="Crear usuario">
+        </div>
+    </form>
+</div>
+{{/template}}

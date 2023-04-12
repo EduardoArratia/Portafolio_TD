@@ -12,6 +12,9 @@ import { fileURLToPath } from "url";
 //importar rutas desde routes.js en carpeta routes
 import indexRoutes from "./routes/routes.js"
 
+//
+
+
 //Asignar express a una constante
 const app = express();
 
@@ -21,8 +24,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 //Donde va la carpeta public donde irán css
 app.use(express.static(join(__dirname,"/public"))) //join concatena la direccion no como string, sino como url
 
-//Donde va la carpeta public donde irán los script
-app.use(express.static(join(__dirname,"/js")))
+
+//Donde va la carpeta public donde las clases
+app.use(express.static(join(__dirname,"/clases")))
+
+
+// //Donde va la carpeta public donde irán los script
+// app.use(express.static(join(__dirname,"/js")))
 
 //Configuracion HandleBars //
 import hbs from "hbs";

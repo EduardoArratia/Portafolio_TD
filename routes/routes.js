@@ -8,11 +8,11 @@ import cookieParser from "cookie-parser";
 import pg from "pg";
 
 import dotenv from "dotenv" // proteccion de datos de la base de datos
-
+// import CryptoJS from "crypto-js" para encriptar contraseña 
 
 
 const router = Router();
-const PassPortLocal = PassportLocal.Strategy // para qué, es una calse?
+const PassPortLocal = PassportLocal.Strategy // para qué, es una clase?
 const {Pool} = pg;
 
 
@@ -37,8 +37,6 @@ const pool =new Pool({
 
 });
     
-
-
 // PARA INICIAR SESION
 router.use(bodyParser.json()); //para soportar JSON encoded bodies
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -55,24 +53,58 @@ router.use(passport.initialize());
 router.use(passport.session());
 
 
-// Para buscar el usuario en la base de datos y validarlo en el input
-passport.use(new PassPortLocal(function (username, password, done) {
-    // done(err,{name: "uriel"},) usa 3 argumentos, name define si el inicio se inicio correctamente
-    let usuario
-    pool.query(`SELECT correo, contrasena, id, nombre from usuarios where correo LIKE $1`, [username], (error, res, fields) => {
-        if (error) {
-            throw error
-        } else {
-            usuario = res.rows[0]
-            if (username == usuario.correo && password == usuario.contrasena) {
-                nombre = usuario.nombre
-                return done(null, { id: usuario.id, name: usuario.nombre})
-            }
-            return done(null, false)
-        }
-    })
-}))
 
+// PASSPORT NO ASINCRONO
+// Para buscar el usuario en la base de datos y validarlo en el input
+// passport.use(new PassPortLocal(function (username, password, done) {
+//     // done(err,{name: "uriel"},) usa 3 argumentos, name define si el inicio se inicio correctamente
+//     let usuario
+//     pool.query(`SELECT correo, contrasena, id, nombre from usuarios where correo LIKE $1`, [username], (error, res, fields) => {
+//         if (error) {
+//             throw error
+//         } else {
+//             usuario = res.rows[0]
+//             if (username == usuario.correo && password == usuario.contrasena) {
+//                 nombre = usuario.nombre
+//                 return done(null, { id: usuario.id, name: usuario.nombre})
+//             }
+//             return done(null, false)
+//         }
+//     })
+// }))
+
+// registrar asincrono
+
+
+passport.use(new PassPortLocal(async function (username, password, done) {
+    let usuario
+    try {
+        const res = await pool.query(`SELECT correo, contraseña, id, nombre from usuarios where correo LIKE $1`, [username])
+        usuario = res.rows[0]
+        if (username == usuario.correo && password == usuario.contraseña) {
+            nombre = usuario.nombre
+            return done(null, { id: usuario.id, name: usuario.nombre})
+        }
+        return done(null, false)
+    } catch (error) {
+        throw error
+    }}))
+
+//crear usuario
+async function agregarUsuario(nombre, apellido, edad, correo, contraseña) {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('INSERT INTO usuarios (nombre, apellido, edad, correo, contraseña) VALUES ($1, $2, $3, $4, $5)', [nombre, apellido, edad, correo, contraseña]);
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+
+    } finally {
+      client.release();
+    }
+}
 
 
 
@@ -102,17 +134,23 @@ router.get("/arquitectura", (req, res) => {
 })
 
 // app debe estar solo asi para que no se entre sin autentificar
-router.get("/app", (req,res,next) =>{                   
-    if(req.isAuthenticated()){ 
-        autenticacion = true
-        return next()
-    }else{
-        res.redirect("/login")
-    }
-},
-(req, res) =>{ 
-    res.render("app",{autenticacion})
+router.get("/mapa", (req, res) => {
+    res.render("mapa")
 })
+
+
+
+// router.get("/mapa", (req,res,next) =>{                   
+//     if(req.isAuthenticated()){ 
+//         autenticacion = true
+//         return next()
+//     }else{
+//         res.redirect("/login")
+//     }
+// },
+// (req, res) =>{ 
+//     res.render("mapa",{autenticacion})
+// })
 
 // acceder a bootcamp
 router.get("/bootcamp", (req, res) => {
@@ -124,18 +162,75 @@ router.get("/login", (req, res) => {
     res.render("login")
 })
 
+router.get("/registro", (req, res) => {
+    res.render("registro")
+})
 //RUTAS ESPECIFICAS
 
+//activarlas despues
+//Al logear se mete a la app
+// router.post("/login",passport.authenticate("local",
+//     {failureRedirect: "/login"}),
+//         function(req, res){
+//         autenticacion = true
+//         res.render("app",{autenticacion,nombre})
+//                         }                  
+// )
 
-// Al logear se mete a la app
-router.post("/login",passport.authenticate("local",
-    {failureRedirect: "/login"}),
-        function(req, res){
-        autenticacion = true
-        res.render("app",{autenticacion,nombre})
-                        }                  
-)
+// router.post("/login", passport.authenticate("local", 
+//     { failureRedirect: "/login"}), function(req, res) {
+//     let nombre;
+//     const autenticacion = true;
+//     res.render("mapa",{autenticacion, nombre: req.user.name } ); 
+// });
 
+// Crear usuario y registrar en la base de datos
+router.post('/registro', async (req, res) => {
+    const { nombre, apellido, edad, correo, contraseña } = req.body;
+    try {
+      await agregarUsuario(nombre, apellido, edad, correo, contraseña);
+      res.redirect('login');
+    } catch (e) {
+      console.error(e);
+      res.render('registro', { error: 'Ocurrió un error al agregar el usuario.' });
+    }
+  });
+
+// CREAR USUARIO E INGRESO EN MISMO POST
+// router.post("/login", async function(req, res, next) {
+//     try {
+//       const username = req.body.username;
+//       const password = req.body.password;
+  
+//       const client = await pool.connect();
+//       let usuario;
+  
+//       try {
+//         await client.query("BEGIN");
+//         const result = await client.query("SELECT correo, contrasena, id, nombre FROM usuarios WHERE correo LIKE $1", [
+//           username
+//         ]);
+//         usuario = result.rows[0];
+//         await client.query("COMMIT");
+//       } catch (e) {
+//         await client.query("ROLLBACK");
+//         throw e;
+//       } finally {
+//         client.release();
+//       }
+  
+//       if (&& username == usuario.correo && password == usuario.contrasena) {
+//         const nombre = usuario.nombre;
+//         req.session.autenticacion = true;
+//         req.session.nombre = nombre;
+//         res.render("app", { autenticacion: true, nombre: nombre });
+//       } else {
+//         res.redirect("/login");
+//       }
+//     } catch (error) {
+//       next(error);
+//     }
+//   });
 
 //Crear usuario
 //lo que se registra en el input debe pasarse a otro formato para poder subirlo a la BD

@@ -218,4 +218,21 @@ a {
     
     }
     
+    body { margin: 0; padding: 0; }
 
+    #map { 
+        position: flex;
+        justify-content: center;
+        top: 0;
+        bottom: 0; 
+        height: auto;
+        width: 800px;
+        height: 600px; 
+    }
+
+        #map-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+          }

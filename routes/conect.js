@@ -1,3 +1,5 @@
+//La conexión a la base de datos queda aisalada.
+
 import pg from "pg";
 const {Pool} = pg;
 import dotenv from "dotenv"

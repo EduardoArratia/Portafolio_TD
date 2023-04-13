@@ -6,21 +6,16 @@ import PassportLocal from "passport-local" // te permite guardar la info hasta f
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import pg from "pg";
-import pool from "./conect.js";
-// import conect from "../"
-import dotenv from "dotenv"
 import { Usuario } from '../public/js/clases/usuarios.js';
 const usuario = new Usuario();
 // proteccion de datos de la base de datos
-// import CryptoJS from "crypto-js" para encriptar contraseña 
+// import CryptoJS from "crypto-js" para encriptar contraseña --- AUN NO LO UTILIZO
 
 
 const router = Router();
 const PassPortLocal = PassportLocal.Strategy // para qué, es una clase?
-const {Pool} = pg;
 
-
-let nombre;
+let nombre; // No entiendo esta variable
 let autenticacion = false;
 
     
@@ -40,27 +35,6 @@ router.use(passport.initialize());
 router.use(passport.session());
 
 
-// //crear usuario
-// async function agregarUsuario(nombre, apellido, edad, correo, contraseña) {
-//     const client = await pool.connect();
-//     try {
-//       await client.query('BEGIN');
-//       await client.query('INSERT INTO usuarios (nombre, apellido, edad, correo, contraseña) VALUES ($1, $2, $3, $4, $5)', [nombre, apellido, edad, correo, contraseña]);
-//       await client.query('COMMIT');
-//     } catch (e) {
-//       await client.query('ROLLBACK');
-//       throw e;
-
-//     } finally {
-//       client.release();
-//     }
-
-
-// }
-
-
-
-//{id: 1 , name:"cody"})
 //1 => serializacion pasarle todo el objeto a un dato, cuando necesito usar al usario tomo el id y retorno el objeto (deserializacion)
 passport.serializeUser(function (user, done) {
     done(null, user.id);
@@ -83,21 +57,12 @@ router.get("/arquitectura", (req, res) => {
    
 })
 
+// ACTIVAR CUANDO SE ESTE TRABAJANDO Y NO TENER QUE LOGEAR A CADA RATO
 // app debe estar solo asi para que no se entre sin autentificar
 // router.get("/mapa", (req, res) => {
 //     res.render("mapa")
 // })
 
-
-//este no lo use
-// router.get("/mapa", (req, res, next) => {
-//     const usuario = new Usuario(req.user);
-//     if (usuario.autenticar()) {
-//         res.render("mapa", { autenticacion: true, nombre: usuario.obtenerNombre() });
-//     } else {
-//         res.redirect("/login");
-//     }
-// });
 
 router.get("/mapa", (req,res,next) =>{                   
     if(req.isAuthenticated()){ 
@@ -126,30 +91,6 @@ router.get("/registro", (req, res) => {
 })
 //RUTAS ESPECIFICAS
 
-//activarlas despues
-//Al logear se mete a la app
-// router.post("/login",passport.authenticate("local",
-//     {failureRedirect: "/login"}),
-//         function(req, res){
-//         autenticacion = true
-//         res.render("app",{autenticacion,nombre})
-//                         }                  
-// )
-
-// router.post("/login", passport.authenticate("local", 
-//     { failureRedirect: "/login"}), function(req, res) {
-//     let nombre;
-//     const autenticacion = true;
-//     res.render("mapa",{autenticacion, nombre: req.user.name } ); 
-// });
-
-// router.post("/login", passport.authenticate("local", {
-//     failureRedirect: "/login"
-//   }), function(req, res) {
-//     const autenticacion = true;
-//     const nombre = req.user.name;
-//     res.render("mapa", { autenticacion, nombre });
-//   });
 
 //utiliza la clase usuario para hacer login
 router.post("/login", passport.authenticate("local", {
@@ -157,26 +98,17 @@ router.post("/login", passport.authenticate("local", {
   }), function(req, res) {
     const autenticacion = true;
     const nombre = req.user.name;
+    console.log(nombre)
     res.render("mapa", { autenticacion, nombre });
   });
+  // configurar el passport usando la clase a través de usuario.autenticar
   passport.use(new PassPortLocal(function(username, password, done) {
     usuario.autenticar(username, password, done);
   }));
 
 
 // // UTILIZA LA CLASE USUARIO PARA AGREGAR
-//   router.post('/registro', async (req, res) => {
-//     const { nombre, apellido, edad, correo, contraseña } = req.body;
-  
-//     try {
-//       const usuario = new Usuario(nombre, apellido, edad, correo, contraseña);
-//       await usuario.agregarUsuario();
-//       res.redirect('login');
-//     } catch (e) {
-//       console.error(e);
-//       res.render('registro', { error: 'Ocurrió un error al agregar el usuario.' });
-//     }
-//   });
+
 router.post("/registro", (req, res) => {
     const { nombre, apellido, edad, correo,contraseña} = req.body;
   
@@ -186,18 +118,6 @@ router.post("/registro", (req, res) => {
     res.redirect("/login")
   });
 
-
-// Crear usuario y registrar en la base de datos
-// router.post('/registro', async (req, res) => {
-//     const { nombre, apellido, edad, correo, contraseña } = req.body;
-//     try {
-//       await agregarUsuario(nombre, apellido, edad, correo, contraseña);
-//       res.redirect('login');
-//     } catch (e) {
-//       console.error(e);
-//       res.render('registro', { error: 'Ocurrió un error al agregar el usuario.' });
-//     }
-//   });
 
 //Crear usuario
 //lo que se registra en el input debe pasarse a otro formato para poder subirlo a la BD

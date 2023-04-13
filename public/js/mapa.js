@@ -1,4 +1,4 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiZWR1YXJkb2FycmF0aWEiLCJhIjoiY2oyczh6NGU0MDAzajMwbnZ5OWV4aTVoeSJ9.VnYlSDsnqUCZQRVIQe9C7g';
+mapboxgl.accessToken = 'pk.eyJ1IjoiZWR1YXJkb2FycmF0aWEiLCJhIjoiY2xnZjZ2NnI0MDZ0NTN0bHF6aXUwazZ2MiJ9.SqjfShc-Io_qwFTj3wImZw';
 const map = new mapboxgl.Map({
 container: 'map', // container ID
 // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
@@ -19,5 +19,7 @@ map.addControl(
     showUserHeading: true
     })
     );
+
+  
 
     //hacer una clase que contenga el post-delete-upload
